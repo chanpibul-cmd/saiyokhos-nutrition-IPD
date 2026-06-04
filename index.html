@@ -9,74 +9,25 @@
   <style>
     body { background-color: #f4f6f9; font-family: sans-serif; margin-top: 20px; }
     .container-app { max-width: 900px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
-    #app-content { display: none; }
     .nav-tabs { border-bottom: 2px solid #dee2e6; }
     .nav-tabs .nav-link.active { font-weight: bold; border-bottom: 2px solid #0d6efd; }
   </style>
 </head>
 <body>
 
-  <div id="login-section" class="container" style="max-width: 350px; margin-top: 15vh;">
-    <div class="card shadow-sm border-0">
-      <div class="card-body p-4">
-        <form id="loginForm" onsubmit="handleLogin(event)">
-          <div class="mb-3">
-            <label class="form-label text-muted small">Username</label>
-            <input type="text" id="username" class="form-control" required>
-          </div>
-          <div class="mb-4">
-            <label class="form-label text-muted small">Password</label>
-            <input type="password" id="password" class="form-control" required>
-          </div>
-          <button type="submit" class="btn btn-primary w-100">เข้าสู่ระบบ</button>
-          <div id="loginError" class="text-danger mt-3 text-center small" style="display:none;">รหัสผ่านไม่ถูกต้อง</div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <div id="app-content" class="container-app">
+  <div class="container-app">
     <ul class="nav nav-tabs border-0 mb-4" id="mainTab" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link border-0 active" id="form-tab" data-bs-toggle="tab" data-bs-target="#form-pane" type="button" role="tab">ลงบันทึกข้อมูลมื้ออาหาร</button>
+        <button class="nav-link border-0 active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard-pane" type="button" role="tab" onclick="loadDashboard()">สรุป Dashboard</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link border-0" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard-pane" type="button" role="tab" onclick="loadDashboard()">สรุป Dashboard</button>
+        <button class="nav-link border-0" id="form-tab" data-bs-toggle="tab" data-bs-target="#form-pane" type="button" role="tab">ลงบันทึกข้อมูลมื้ออาหาร</button>
       </li>
     </ul>
 
     <div class="tab-content" id="mainTabContent">
       
-      <div class="tab-pane fade show active" id="form-pane" role="tabpanel">
-        <form id="dataForm" onsubmit="handleSaveData(event)">
-          <div class="row g-3 mb-4">
-            <div class="col-md-6">
-              <label class="form-label text-muted small">วันที่</label>
-              <input type="date" id="date" name="date" class="form-control" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label text-muted small">มื้ออาหาร (กรอกตามลำดับ เช้า > เที่ยง > เย็น)</label>
-              <select id="meal" name="meal" class="form-select" required>
-                <option value="เช้า">เช้า</option>
-                <option value="เที่ยง">เที่ยง</option>
-                <option value="เย็น">เย็น</option>
-              </select>
-            </div>
-          </div>
-          
-          <div class="row g-3 mb-4">
-            <div class="col-md-4"><label class="form-label text-muted small">1. อาหารเตียงสามัญ</label><input type="number" name="type1" class="form-control" min="0"></div>
-            <div class="col-md-4"><label class="form-label text-muted small">2. อาหารห้อง VIP</label><input type="number" name="type2" class="form-control" min="0"></div>
-            <div class="col-md-4"><label class="form-label text-muted small">3. นมต่างๆ</label><input type="number" name="type3" class="form-control" min="0"></div>
-            <div class="col-md-4"><label class="form-label text-muted small">4. ไข่</label><input type="number" name="type4" class="form-control" min="0"></div>
-            <div class="col-md-4"><label class="form-label text-muted small">5. อาหารทางสายให้อาหาร</label><input type="number" name="type5" class="form-control" min="0"></div>
-            <div class="col-md-4"><label class="form-label text-muted small">6. อาหารทางการแพทย์</label><input type="number" name="type6" class="form-control" min="0"></div>
-          </div>
-          <button type="submit" class="btn btn-success w-100" id="btnSave" style="padding: 12px;">บันทึกข้อมูลลงตาราง</button>
-        </form>
-      </div>
-
-      <div class="tab-pane fade" id="dashboard-pane" role="tabpanel">
+      <div class="tab-pane fade show active" id="dashboard-pane" role="tabpanel">
         <div id="loading" class="text-center text-muted my-5">กำลังโหลดข้อมูลและประมวลผลกราฟ...</div>
         <div class="row g-4" id="chartsContainer" style="display:none;">
           <div class="col-md-6">
@@ -90,18 +41,77 @@
           </div>
         </div>
       </div>
+
+      <div class="tab-pane fade" id="form-pane" role="tabpanel">
+        
+        <div id="login-sub-section" style="max-width: 350px; margin: 50px auto;">
+          <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+              <h5 class="card-title mb-3 text-center">สิทธิ์เฉพาะผู้ดูแลระบบ</h5>
+              <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="mb-3">
+                  <label class="form-label text-muted small">Username</label>
+                  <input type="text" id="username" class="form-control" required>
+                </div>
+                <div class="mb-4">
+                  <label class="form-label text-muted small">Password</label>
+                  <input type="password" id="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">ตรวจสอบสิทธิ์</button>
+                <div id="loginError" class="text-danger mt-3 text-center small" style="display:none;">รหัสผ่านไม่ถูกต้อง</div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div id="data-form-section" style="display: none;">
+          <form id="dataForm" onsubmit="handleSaveData(event)">
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label class="form-label text-muted small">วันที่</label>
+                <input type="date" id="date" name="date" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label text-muted small">มื้ออาหาร (เช้า > เที่ยง > เย็น)</label>
+                <select id="meal" name="meal" class="form-select" required>
+                  <option value="เช้า">เช้า</option>
+                  <option value="เที่ยง">เที่ยง</option>
+                  <option value="เย็น">เย็น</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="row g-3 mb-4">
+              <div class="col-md-4"><label class="form-label text-muted small">1. อาหารเตียงสามัญ</label><input type="number" name="type1" class="form-control" min="0"></div>
+              <div class="col-md-4"><label class="form-label text-muted small">2. อาหารห้อง VIP</label><input type="number" name="type2" class="form-control" min="0"></div>
+              <div class="col-md-4"><label class="form-label text-muted small">3. นมต่างๆ</label><input type="number" name="type3" class="form-control" min="0"></div>
+              <div class="col-md-4"><label class="form-label text-muted small">4. ไข่</label><input type="number" name="type4" class="form-control" min="0"></div>
+              <div class="col-md-4"><label class="form-label text-muted small">5. อาหารทางสายให้อาหาร</label><input type="number" name="type5" class="form-control" min="0"></div>
+              <div class="col-md-4"><label class="form-label text-muted small">6. อาหารทางการแพทย์</label><input type="number" name="type6" class="form-control" min="0"></div>
+            </div>
+            <button type="submit" class="btn btn-success w-100" id="btnSave" style="padding: 12px;">บันทึกข้อมูลลงตาราง</button>
+          </form>
+        </div>
+
+      </div>
       
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // *********************************************************
-    // นำ URL ของ Web App ที่ได้จาก Apps Script มาใส่ตรงนี้ครับ!
-    // *********************************************************
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylPSdtA38rTvd_8VXCQ1BHZ0fSOLmtEbQSVU51q_xNeOCe52A6Sr3DpHgti6OlfTNi/exec"; 
+    // -------------------------------------------------------------
+    // วาง URL ของ Web App จาก Apps Script ด้านล่างนี้แทนข้อความเดิม
+    // -------------------------------------------------------------
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNNbq4Ta56GGi91V1Vf2Kpd4pe57A1U-_zrksWPMHZ9rT1HqSGyYUm7XkXB4NDuArW/exec"; 
 
     let charts = {};
+    let isLoggedIn = false;
+
+    // เรียกโหลดแดชบอร์ดทันทีที่เปิดหน้าเว็บขึ้นมาโดยไม่ต้องรอ login
+    window.onload = function() {
+      loadDashboard();
+    };
 
     function handleLogin(e) {
       e.preventDefault();
@@ -109,8 +119,9 @@
       let p = document.getElementById('password').value;
       
       if (u === 'admin' && p === '3006') {
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('app-content').style.display = 'block';
+        isLoggedIn = true;
+        document.getElementById('login-sub-section').style.display = 'none';
+        document.getElementById('data-form-section').style.display = 'block';
         document.getElementById('date').value = new Date().toISOString().split('T')[0];
       } else {
         document.getElementById('loginError').style.display = 'block';
@@ -120,14 +131,10 @@
     function handleSaveData(e) {
       e.preventDefault();
       
-      // ฟังก์ชันจัดการปี พ.ศ. เป็น ค.ศ. บนฝั่ง Front-end ป้องกันความผิดพลาด
       let dateInput = document.getElementById('date').value;
       let dateParts = dateInput.split('-');
       let year = parseInt(dateParts[0]);
-      if (year > 2500) {
-        year -= 543;
-        dateParts[0] = year.toString();
-      }
+      if (year > 2500) { year -= 543; dateParts[0] = year.toString(); }
       let finalDate = dateParts.join('-');
 
       let form = document.getElementById('dataForm');
@@ -159,15 +166,14 @@
         alert("บันทึกข้อมูลเรียบร้อย");
         let currentDate = form.date.value;
         form.reset();
-        form.date.value = currentDate; // คงวันที่เดิมไว้เพื่อความสะดวก
+        form.date.value = currentDate;
         
-        // ขยับมื้ออาหารให้เป็นมื้อถัดไปอัตโนมัติ
         let mealSelect = document.getElementById('meal');
         if(payload.data.meal === 'เช้า') mealSelect.value = 'เที่ยง';
         else if(payload.data.meal === 'เที่ยง') mealSelect.value = 'เย็น';
-        else mealSelect.value = 'เช้า'; // วนกลับ
+        else mealSelect.value = 'เช้า';
       })
-      .catch(error => alert("เกิดข้อผิดพลาด: " + error))
+      .catch(error => alert("เกิดข้อผิดพลาดในการบันทึก: " + error))
       .finally(() => {
         btn.disabled = false;
         btn.innerText = 'บันทึกข้อมูลลงตาราง';
@@ -186,7 +192,7 @@
           document.getElementById('chartsContainer').style.display = 'flex';
         })
         .catch(error => {
-          document.getElementById('loading').innerText = "โหลดข้อมูลไม่สำเร็จ";
+          document.getElementById('loading').innerText = "เกิดข้อผิดพลาดในการดึงข้อมูลตาราง";
         });
     }
 
